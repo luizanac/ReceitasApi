@@ -211,9 +211,9 @@ Release/
 ./Release
 ./Release/
 
-.vscode/
+.vscode/*
 ./.vscode
-./.vscode/
+./.vscode/*
 
 /Properties
 ./Properties
