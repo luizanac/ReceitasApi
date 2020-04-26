@@ -1,0 +1,43 @@
+version: '3'
+
+networks:
+  backend:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.1.0/24
+
+services:
+  mysqldb:
+    container_name: mysqldb
+    image: mysql:8
+    volumes:
+      - "C:/docker/mysql:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    networks:
+      backend:
+        ipv4_address: 172.20.1.2
+
+  receitas:
+    container_name: receitas-api
+    depends_on: 
+      - mysqldb
+    build: .
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        - ASPNETCORE_URLS=http://*:5000
+        - RECEITAS_MYSQL_DATABASE=ReceitasDb
+        - RECEITAS_MYSQL_SERVER=172.20.1.2
+        - RECEITAS_MYSQL_USERNAME=root
+        - RECEITAS_MYSQL_PASSWORD=root
+        - RECEITAS_JWT_KEY=qk8EwG5D6jrxKwkeBppId48MdL2oqMzb
+    volumes:
+      - "C:/docker/ApiResources:/app/deploy/Resources"
+    ports:
+      - "5000:5000"
+    networks:
+      backend:
+        ipv4_address: 172.20.1.3
